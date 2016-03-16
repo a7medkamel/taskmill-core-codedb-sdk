@@ -1,0 +1,25 @@
+{
+  "name": "taskmill-core-codedb-sdk",
+  "version": "0.0.1",
+  "description": "lib to make calls to taskmill-core-codedb service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a7medkamel/taskmill-core-codedb-sdk.git"
+  },
+  "author": "a7medkamel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a7medkamel/taskmill-core-codedb-sdk/issues"
+  },
+  "homepage": "https://github.com/a7medkamel/taskmill-core-codedb-sdk#readme",
+  "dependencies": {
+    "config-url": "git+https://github.com/a7medkamel/config-url.git",
+    "request-promise": "^2.0.1",
+    "taskmill-core-man": "git+https://github.com/a7medkamel/taskmill-core-man.git",
+    "url-join": "0.0.1"
+  }
+}
