@@ -12,7 +12,7 @@ const url = config.getUrl('codedb');
 function blob(remote, filename, options) {
   let body = {
       remote          : remote
-    , filename        : path
+    , filename        : filename
     , branch          : options.branch
     , token           : options.token
   };
