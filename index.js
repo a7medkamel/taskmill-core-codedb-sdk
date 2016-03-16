@@ -35,13 +35,26 @@ function ls(remote, options) {
   let body = {
       remote          : remote
     , token           : options.token
+    , branch          : options.branch
   };
 
   return Promise
           .resolve(rp.post(urljoin(url, '/ls'), { body : body, json : true }));
 }
 
+function pull(remote, options) {
+  let body = {
+      remote          : remote
+    , token           : options.token
+    , branch          : options.branch
+  };
+
+  return Promise
+          .resolve(rp.post(urljoin(url, '/pull'), { body : body, json : true }));
+}
+
 module.exports = {
     blob  : blob
   , ls    : ls
+  , pull  : pull
 };
