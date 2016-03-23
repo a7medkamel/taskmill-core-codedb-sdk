@@ -5,9 +5,10 @@ var Promise         = require('bluebird')
   , rp              = require('request-promise')
   , man             = require('taskmill-core-man')
   , urljoin         = require('url-join')
+  , errors          = require('request-promise/errors')
   ;
 
-const url = config.getUrl('codedb');
+const url = config.has('codedb')? config.getUrl('codedb') : undefined;
 
 function blob(remote, filename, options) {
   let body = {
@@ -18,7 +19,7 @@ function blob(remote, filename, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url, '/blob'), { body : body, json : true }))
+          .resolve(rp.post(urljoin(url || options.url, '/blob'), { body : body, json : true }))
           .then((result) => {
             return {
                 content : result.content
@@ -28,6 +29,9 @@ function blob(remote, filename, options) {
               , branch  : result.branch
               , path    : result.path
             };
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not found');
           });
 }
 
@@ -39,7 +43,10 @@ function ls(remote, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url, '/ls'), { body : body, json : true }));
+          .resolve(rp.post(urljoin(url || options.url, '/ls'), { body : body, json : true }))
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not found');
+          });
 }
 
 function pull(remote, options) {
@@ -50,7 +57,10 @@ function pull(remote, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url, '/pull'), { body : body, json : true }));
+          .resolve(rp.post(urljoin(url || options.url, '/pull'), { body : body, json : true }))
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not found');
+          });
 }
 
 module.exports = {
