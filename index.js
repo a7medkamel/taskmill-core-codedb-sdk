@@ -40,6 +40,7 @@ function ls(remote, options) {
       remote          : remote
     , token           : options.token
     , branch          : options.branch
+    , populate        : options.populate
   };
 
   return Promise
