@@ -16,6 +16,7 @@ function blob(remote, filename, options) {
     , filename        : filename
     , branch          : options.branch
     , token           : options.token
+    , populate        : options.populate
   };
 
   return Promise
