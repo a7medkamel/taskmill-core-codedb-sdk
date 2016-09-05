@@ -3,7 +3,6 @@
 var Promise         = require('bluebird')
   , config          = require('config-url')
   , rp              = require('request-promise')
-  , man             = require('taskmill-core-man')
   , urljoin         = require('url-join')
   , errors          = require('request-promise/errors')
   ;
@@ -22,14 +21,12 @@ function blob(remote, filename, options) {
   return Promise
           .resolve(rp.post(urljoin(url || options.url, '/blob'), { body : body, json : true }))
           .then((result) => {
-            return {
-                content : result.content
-              , manual  : man.get(result.content)
-              , remote  : result.repository.remote
-              , private : result.repository.private
-              , branch  : result.branch
-              , path    : result.path
-            };
+            let ret = _.pick(result, 'content', 'manual', 'branch', 'path');
+
+            ret.remote = result.repository.remote;
+            ret.private = result.repository.private;
+
+            return ret;
           })
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not found');

@@ -19,7 +19,6 @@
   "dependencies": {
     "config-url": "git+https://github.com/a7medkamel/config-url.git",
     "request-promise": "^2.0.1",
-    "taskmill-core-man": "git+https://github.com/a7medkamel/taskmill-core-man.git",
     "url-join": "0.0.1"
   }
 }
