@@ -2,6 +2,7 @@
 
 var Promise         = require('bluebird')
   , config          = require('config-url')
+  , _               = require('lodash')
   , rp              = require('request-promise')
   , urljoin         = require('url-join')
   , errors          = require('request-promise/errors')
