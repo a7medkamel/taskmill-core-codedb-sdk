@@ -22,10 +22,10 @@ function blob(remote, filename, options) {
   return Promise
           .resolve(rp.post(urljoin(url || options.url, '/blob'), { body : body, json : true }))
           .then((result) => {
-            let ret = _.pick(result, 'content', 'manual', 'branch', 'path');
+            let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository');
 
             ret.remote = result.repository.remote;
-            ret.private = result.repository.private;
+            // ret.private = result.repository.private;
 
             return ret;
           })
@@ -54,6 +54,7 @@ function pull(remote, options) {
       remote          : remote
     , token           : options.token
     , branch          : options.branch
+    , populate        : options.populate
   };
 
   return Promise
