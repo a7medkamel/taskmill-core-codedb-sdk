@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/a7medkamel/taskmill-core-codedb-sdk#readme",
   "dependencies": {
+    "bluebird": "^3.4.6",
     "config-url": "git+https://github.com/a7medkamel/config-url.git",
     "lodash": "^4.15.0",
     "request-promise": "^2.0.1",
