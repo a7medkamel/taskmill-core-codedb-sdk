@@ -20,7 +20,7 @@ function blob(remote, filename, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url || options.url, '/blob'), { body : body, json : true }))
+          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/blob'), { body : body, json : true }))
           .then((result) => {
             let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository');
 
@@ -43,7 +43,7 @@ function ls(remote, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url || options.url, '/ls'), { body : body, json : true }))
+          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/ls'), { body : body, json : true }))
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not found');
           });
@@ -58,14 +58,29 @@ function pull(remote, options) {
   };
 
   return Promise
-          .resolve(rp.post(urljoin(url || options.url, '/pull'), { body : body, json : true }))
+          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/pull'), { body : body, json : true }))
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not found');
+          });
+}
+
+function archive(remote, options) {
+  let body = {
+      remote          : remote
+    , token           : options.token
+    , branch          : options.branch
+  };
+
+  return Promise
+          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/archive'), { body : body, json : true }))
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not found');
           });
 }
 
 module.exports = {
-    blob  : blob
-  , ls    : ls
-  , pull  : pull
+    blob      : blob
+  , ls        : ls
+  , pull      : pull
+  , archive   : archive
 };
