@@ -4,6 +4,7 @@ var Promise         = require('bluebird')
   , config          = require('config-url')
   , _               = require('lodash')
   , rp              = require('request-promise')
+  , request         = require('request')
   , urljoin         = require('url-join')
   , errors          = require('request-promise/errors')
   ;
@@ -71,10 +72,11 @@ function archive(remote, options) {
     , branch          : options.branch
   };
 
-  return Promise
-          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/archive'), { body : body, json : true }))
-          .catch(errors.StatusCodeError, (err) => {
-            throw new Error('not found');
+  return request({
+              url     : urljoin(url || _.get(options, 'url'), '/archive')
+            , method  : 'POST' 
+            , body    : body
+            , json    : true
           });
 }
 
