@@ -65,17 +65,23 @@ function pull(remote, options) {
           });
 }
 
-function archive(remote, options) {
+function archive(remote, options = {}) {
   let body = {
       remote          : remote
     , token           : options.token
     , branch          : options.branch
   };
 
+  let headers = {};
+  if (options.etag) {
+    headers['If-None-Match'] = options.etag    
+  }
+
   return request({
               url     : urljoin(url || _.get(options, 'url'), '/archive')
             , method  : 'POST' 
             , body    : body
+            , headers : headers
             , json    : true
           });
 }
