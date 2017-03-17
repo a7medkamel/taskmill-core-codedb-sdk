@@ -35,6 +35,31 @@ function blob(remote, filename, options) {
           });
 }
 
+function hotreload(remote, filename, content, options) {
+  let body = {
+      remote          : remote
+    , filename        : filename
+    , content         : content
+    , branch          : options.branch
+    , token           : options.token
+    , populate        : options.populate
+  };
+
+  return Promise
+          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/blob/hotreload'), { body : body, json : true }))
+          .then((result) => {
+            let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository');
+
+            ret.remote = result.repository.remote;
+            // ret.private = result.repository.private;
+
+            return ret;
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not found');
+          });
+}
+
 function ls(remote, options) {
   let body = {
       remote          : remote
@@ -88,6 +113,7 @@ function archive(remote, options = {}) {
 
 module.exports = {
     blob      : blob
+  , hotreload : hotreload
   , ls        : ls
   , pull      : pull
   , archive   : archive
