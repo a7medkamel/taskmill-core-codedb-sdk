@@ -95,11 +95,12 @@ function archive(remote, options = {}) {
       remote          : remote
     , token           : options.token
     , branch          : options.branch
+    , make            : options.make
   };
 
   let headers = {};
-  if (options.etag) {
-    headers['If-None-Match'] = options.etag    
+  if (options.ifnonematch) {
+    headers['If-None-Match'] = options.ifnonematch    
   }
 
   return request({
