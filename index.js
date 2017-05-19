@@ -25,7 +25,7 @@ function blob(remote, filename, options = {}) {
   return Promise
           .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/blob'), { body, json : true, headers }))
           .then((result) => {
-            let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository');
+            let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository', 'ast', 'markdown', 'block');
 
             ret.remote = result.repository.remote;
             // ret.private = result.repository.private;
