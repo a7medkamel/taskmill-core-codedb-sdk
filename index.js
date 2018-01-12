@@ -7,8 +7,8 @@ var Promise         = require('bluebird')
   , request         = require('request')
   , urljoin         = require('url-join')
   , errors          = require('request-promise/errors')
-  , SizeLimitError  = require('./lib/size-limit')
-  , NotFoundError   = require('./lib/not-found')
+  , SizeLimitError  = require('./lib/error/size-limit')
+  , NotFoundError   = require('./lib/error/not-found')
   ;
 
 const url = config.has('codedb')? config.getUrl('codedb') : undefined;
