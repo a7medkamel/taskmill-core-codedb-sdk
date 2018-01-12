@@ -7,6 +7,8 @@ var Promise         = require('bluebird')
   , request         = require('request')
   , urljoin         = require('url-join')
   , errors          = require('request-promise/errors')
+  , SizeLimitError  = require('./lib/size-limit')
+  , NotFoundError   = require('./lib/not-found')
   ;
 
 const url = config.has('codedb')? config.getUrl('codedb') : undefined;
@@ -22,8 +24,9 @@ function blob(remote, filename, options = {}) {
     headers['Authorization'] = bearer;
   }
 
-  return Promise
-          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/blob'), { body, json : true, headers }))
+  return rp
+          .post(urljoin(url || _.get(options, 'url'), '/blob'), { body, json : true, headers })
+          .promise()
           .then((result) => {
             let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository', 'ast', 'markdown', 'block');
 
@@ -32,8 +35,14 @@ function blob(remote, filename, options = {}) {
 
             return ret;
           })
-          .catch(errors.StatusCodeError, (err) => {
-            throw new Error('not found');
+          .catch(errors.StatusCodeError, (reason) => {
+            let { name, message } = (reason.error || {});
+
+            if (name == 'BLOB_SIZE_ERROR') {
+              throw new SizeLimitError(message);
+            }
+
+            throw new NotFoundError('not found');
           });
 }
 
@@ -125,7 +134,7 @@ function archive(remote, options = {}) {
     ;
 
   if (options.ifnonematch) {
-    headers['If-None-Match'] = options.ifnonematch    
+    headers['If-None-Match'] = options.ifnonematch
   }
 
   if (bearer) {
@@ -134,7 +143,7 @@ function archive(remote, options = {}) {
 
   return request({
               url     : urljoin(url || _.get(options, 'url'), '/archive')
-            , method  : 'POST' 
+            , method  : 'POST'
             , body
             , headers
             , json    : true
