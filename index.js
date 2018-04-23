@@ -46,32 +46,6 @@ function blob(remote, filename, options = {}) {
           });
 }
 
-function hotreload(remote, filename, content, options = {}) {
-  let { branch, populate, token, bearer } = options;
-
-  let body    = { remote, filename, content, token, branch, populate }
-    , headers = {}
-    ;
-
-  if (bearer) {
-    headers['Authorization'] = bearer;
-  }
-
-  return Promise
-          .resolve(rp.post(urljoin(url || _.get(options, 'url'), '/blob/hotreload'), { body, json : true, headers }))
-          .then((result) => {
-            let ret = _.pick(result, 'content', 'manual', 'branch', 'path', 'repository');
-
-            ret.remote = result.repository.remote;
-            // ret.private = result.repository.private;
-
-            return ret;
-          })
-          .catch(errors.StatusCodeError, (err) => {
-            throw new Error('not found');
-          });
-}
-
 function ls(remote, options = {}) {
   let { branch, populate, token, bearer } = options;
 
@@ -150,11 +124,35 @@ function archive(remote, options = {}) {
           });
 }
 
+function build(remote, options = {}) {
+  let { branch, make, token, bearer } = options;
+
+  let body    = { remote, token, branch, make }
+    , headers = {}
+    ;
+
+  if (options.ifnonematch) {
+    headers['If-None-Match'] = options.ifnonematch
+  }
+
+  if (bearer) {
+    headers['Authorization'] = bearer;
+  }
+
+  return request({
+              url     : urljoin(url || _.get(options, 'url'), '/build')
+            , method  : 'POST'
+            , body
+            , headers
+            , json    : true
+          });
+}
+
 module.exports = {
-    blob      : blob
-  , hotreload : hotreload
-  , ls        : ls
-  , pull      : pull
-  , sha       : sha
-  , archive   : archive
+    blob
+  , build
+  , ls
+  , pull
+  , sha
+  , archive
 };
