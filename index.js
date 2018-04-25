@@ -139,7 +139,7 @@ function build(remote, options = {}) {
     headers['Authorization'] = bearer;
   }
 
-  return request({
+  return rp({
               url     : urljoin(url || _.get(options, 'url'), '/build')
             , method  : 'POST'
             , body
