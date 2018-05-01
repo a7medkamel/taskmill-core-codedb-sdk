@@ -141,7 +141,18 @@ function build(remote, options = {}) {
 
   return rp
           .post(urljoin(url || _.get(options, 'url'), '/build'), { body, headers, json : true })
-          .promise();
+          .promise()
+          .catch(errors.StatusCodeError, (reason) => {
+            let { statusCode, response } = reason;
+
+            if (statusCode == 304) {
+              let image = response.headers['image'];
+
+              return { image };
+            }
+
+            throw reason;
+          });
 }
 
 module.exports = {
